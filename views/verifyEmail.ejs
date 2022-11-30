@@ -1,0 +1,27 @@
+<head>
+    <link rel="stylesheet" href="verifyEmail.css">
+</head>
+<header>
+    <h1><a href="/">E-Commerce</a></h1>
+</header>
+<div>
+    <div id="div">
+        <h1>Login to Your Accuont</h1>
+        <form method="post" action="/verifyEmail">
+            <label for="email">Email : </label>
+            <input type="email" placeholder="Email" id="email" name="email" required><br><br>
+            <label for="email1">OTP : </label>
+            <input placeholder="OTP" id="email1" name="OTP" maxlength="4" required><br><br>
+            <label for="password">Password : </label>
+            <input placeholder="Password" id="password" name="password" type="password" minlength="8" required><br><br>
+            <% if(name != ""){%>
+                <h2><%= name %></h2>
+            <%}%>
+            <input id="button" type="submit" value="Login">
+            <p>-------------------------------OR-------------------------------</p>
+        </form>
+        <h3>New Here?</h3>
+        <p id="p1">Create account and discover your needed items</p>
+        <a href="/signup"><button id="button1">Create Account</button></a>
+    </div>
+</div>

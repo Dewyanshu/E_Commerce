@@ -1,0 +1,44 @@
+<head>
+    <link rel="stylesheet" href="home.css">
+</head>
+<header>
+    <h1><a href="/">E-Commerce</a></h1>
+    <div>
+        <h2><a href="/profile">
+            <% if(name != ""){%>
+                <%= name %>
+            <%}%>
+            </a>
+        </h2>
+        <a href="/cart"><img src="cart.png" alt="" style="width: 20px; height: 20px; margin-right: 10px;">Cart</a>
+        <a href="/logout"><img src="logout.png" alt="" style="width: 20px; height: 20px; margin-right: 10px; ">Logout</a>
+    </div>
+</header>
+<div class="container" id="hhhhh">
+    <% for(let i = 0; i < productDetails.length ; i++){ %>
+        <div class="child">
+            <img id="img" src="<%= productDetails[i].image %>" alt="">
+            <h3 id="pName"><%= productDetails[i].productName %></h3>
+            <p><b id="details"><%= productDetails[i].price %></b></p>
+            <div id="divtest">
+                <input type="button" class="button2" id="btn2<%= i %>" value="Add to Cart"  onclick=addItemToCart(id)>
+                <input type="button" class="button1" id="btn<%= i %>" value="View Details" onclick=loadDialogBox(id)>
+            </div>
+        </div>
+    <% } %>
+</div>
+<div id="loadMore">
+        <button id="loadMoreBtn" onclick=loadMore()>Load More</button>
+</div>
+<dialog id="dialog">
+    <div id="flex">
+        <img id="dialogIMG" src="" alt="">
+        <div id="flex1">
+            <h3 id="dialogH3"></h3>
+            <h1 id="dialogH1"><b></b></h1>
+            <p id="dialogP"></p>
+            <input type="button" class="btnDialogue" value="close" onclick=closeDialogBox()>        
+        </div>
+    </div>
+</dialog>
+<script src="home.js"></script>

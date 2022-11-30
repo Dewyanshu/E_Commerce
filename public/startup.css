@@ -1,0 +1,44 @@
+body{
+    margin: 0px;
+}
+header{
+    background-color: teal;
+    height: 5vh;
+    font-weight: bolder;
+    font-size: 24px;
+    padding: 1% 0% 0.2% 2%;
+    color: whitesmoke;
+}
+header > h1 > a{
+    text-decoration: none;
+    color: whitesmoke;
+}
+div{
+    height: 80vh;
+    margin: 0%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+#button{
+    padding: 5px 140px;
+    font-size: larger;
+    font-weight: 600;
+    border-radius: 0.8em;
+    background-color: blue;
+    box-shadow: 3px 3px 5px blue;
+    color: white;
+    border-color: white;
+}
+#button1{
+    margin-top: 10%;
+    padding: 5px 20px;
+    font-size: larger;
+    font-weight: 600;
+    border-radius: 0.8em;
+    background-color: green;
+    box-shadow: 3px 3px 5px blue;
+    color: white;
+    border-color: white;
+}
