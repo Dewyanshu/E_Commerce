@@ -43,12 +43,12 @@ app.route('/login').get(async (req, res) => {
 	if (req.session.is_logged_in) {
 		req.session.load = 5;
 		let activeUser = req.session.activeuser.email;
-		// let cartItem = await cartItems.findOne({ email: activeUser });
-		// if(cartItem.cart.length && req.session.p){
-		// 	req.session.p = 0;
-		// 	res.redirect('/cart');
-		// 	return;
-		// }
+		let cartItem = await cartItems.findOne({ email: activeUser });
+		if(cartItem.cart.length && req.session.p){
+			req.session.p = 0;
+			res.redirect('/cart');
+			return;
+		}
 		let name = req.session.activeuser.firstName;
 		const fileObj = await productDetails.find({});
 		const productDetail = fileObj.splice(0, req.session.load);
