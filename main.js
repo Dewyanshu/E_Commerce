@@ -34,6 +34,23 @@ app.route('/').get(async (req, res) => {
 		const fileObj = await productDetails.find({});
 		const productDetail = fileObj.splice(0, req.session.load);
 		res.render('home.ejs', { name: name, productDetails: productDetail })
+
+
+
+
+
+		// let fileObj = [];
+		// req.session.load = 5;
+		// fs.readFile("./productDetails.txt", "utf-8", (err, data) => {
+		// 	if (!err) {
+		// 		fileObj = [];
+		// 		if (data.length > 0 && data[0] === '[' && data[data.length - 1] ===']')
+		// 			fileObj = JSON.parse(data);		
+		// 		let name = req.session.activeuser.firstName;
+		// 		let productDetails = fileObj.splice(0, req.session.load)
+		// 		res.render('home.ejs', { name: name, productDetails: productDetails })
+		// 	}
+		// })
 	}
 	else {
 		res.render('login.ejs', {name : ""})
@@ -50,6 +67,37 @@ app.route('/').get(async (req, res) => {
 		}
 	}
 	res.render('login.ejs', { name : "Invalid Credential!!" })
+
+
+
+
+
+
+
+
+
+
+
+	// fs.readFile("./db.txt", "utf-8", (err, data) => {
+	// 	if (!err) {
+	// 		let file = [], count = 0;
+	// 		if (data.length > 0 && data[0] === '[' && data[data.length - 1] ===']')
+	// 			file = JSON.parse(data);
+	// 		file.forEach((file) => {
+	// 			if (file.email == req.body.email && file.password == req.body.password) {
+	// 				req.session.activeuser = file;
+	// 				count++;
+	// 			}
+	// 		})
+	// 		if (count === 0) {
+	// 			res.render('login.ejs', { name : "Invalid Credential!!" })
+	// 		}
+	// 		else {
+	// 			req.session.is_logged_in = true;
+	// 			res.redirect('/')
+	// 		}
+	// 	}
+	// })
 })
 
 app.route('/profile').get((req, res) => {
@@ -69,6 +117,34 @@ app.route('/profile').get((req, res) => {
 	else{
 		res.redirect('/profile');
 	}
+
+
+
+
+
+
+
+	// let a = 9;
+	// fs.readFile("./db.txt", "utf-8", (err, data) => {
+	// 	if (!err) {
+	// 		let file1 = [];
+	// 		if (data.length > 0 && data[0] === '[' && data[data.length - 1] ===']')
+	// 			file1 = JSON.parse(data);
+	// 		file1.forEach((file1) => {
+	// 			if (file1.email === req.session.activeuser.email && file1.password != req.body.changePassword && req.body.changePassword.length >= 8){
+	// 				file1.password = req.body.changePassword;
+	// 				a = 0;
+	// 			}
+	// 		})
+	// 		fs.writeFile('./db.txt', JSON.stringify(file1), (err) => {
+	// 			res.redirect('/')
+	// 			return;
+	// 		})
+	// 		if(a != 0){
+	// 			res.redirect('/profile')
+	// 		}
+	// 	}
+	// })
 })
 
 app.route('/signup').get((req, res) => {
@@ -104,6 +180,69 @@ app.route('/signup').get((req, res) => {
 		else{
 			res.render('signup.ejs', { name : "Invalid Credentials!!" });
 		}
+
+
+
+
+
+		// fs.readFile("./db.txt", "utf-8", (err, data) => {
+		// 	if (!err) {
+		// 		let { firstName, lastName, mobile, email, password } = req.body;
+		// 		let file = [], count = 0;
+		// 		if (data.length > 0 && data[0] === '[' && data[data.length - 1] === ']')
+		// 			file = JSON.parse(data);
+		// 		for(let i = 0; i < file.length; i++){
+		// 			if ((file[i].email === req.body.email) || (req.body.email === '') || (req.body.password === '')) {
+		// 				count++;
+		// 			}
+		// 		}
+		// 		let user = {
+		// 			firstName: firstName,
+		// 			lastName: lastName,
+		// 			mobile: mobile,
+		// 			email: email,
+		// 			password: password,
+		// 			isVerified: true,
+		// 			mailToken: Date.now()%10000
+		// 		}
+		// 		req.session.activeuser = user;
+		// 		if (count == 0) {
+		// 			file.push(user);
+		// 			fs.writeFile("./db.txt", JSON.stringify(file), (err) => {
+		// 				/*sendEmail(email, user.mailToken, (err, data) => {
+		// 					if(err){
+		// 						res.render('signup.ejs', { name : 'Something went wrong.' })
+		// 						return;
+		// 					}
+		// 				})*/
+		// 				// res.render('verifyEmail.ejs', { name : "Enter OTP and verify Email!!!" })
+		// 				// res.redirect('/');
+		// 			})
+		// 			fs.readFile("./productDetails.txt", "utf-8", (err, data) => {
+		// 				if (!err) {
+		// 					let fileObj1 = [], fileObjCart = {}, k;
+		// 					if (data.length > 0 && data[0] === '[' && data[data.length - 1] ===']')
+		// 						fileObj1 = JSON.parse(data);
+		// 					// req.session.is_logged_in = true;
+		// 					fs.readFile('./cartItems.txt', 'utf-8', (err, data) => {
+		// 						if (!err) {
+		// 							if (data.length > 0 && data[0] === '{' && data[data.length - 1] ==='}')
+		// 								fileObjCart = JSON.parse(data);		
+		// 							k = req.session.activeuser.email;
+		// 							fileObjCart[k] = {};
+		// 							fs.writeFile('./cartItems.txt', JSON.stringify(fileObjCart), (err) => {
+		// 							})
+		// 						}
+		// 					})
+		// 					res.redirect('/');
+		// 				}
+		// 			})
+		// 		}
+		// 		else {
+		// 			res.render('signup.ejs', { name : "Invalid Credentials!!" })
+		// 		}
+		// 	}
+		// })
 	}
 })
 
@@ -118,6 +257,23 @@ app.route('/73665e26tfgyusdg23tfbcdgvjyhsf73t2872').get((req, res) => {
 	productDetail.image = req.file.filename;
 	productDetail.save();
 	res.redirect('/');
+
+
+    // fs.readFile("./productDetails.txt", "utf-8", (err, data) => {
+    //     if(!err){	
+    //         let file = [];
+    //         if(data.length > 0 && data[0] === '[' && data[data.length - 1] === ']')
+    //             file = JSON.parse(data);
+    //         let oo = {};
+    //         oo = req.body;
+    //         oo.image = req.file.filename;
+    //         file.push(oo);
+    //         fs.writeFile("./productDetails.txt", JSON.stringify(file), (err, data) => {
+    //             res.end();
+    //         })
+    //     }
+    // })
+    // res.redirect('/')
 })
 
 app.route('/cart').get(async (req, res) => {
@@ -125,6 +281,28 @@ app.route('/cart').get(async (req, res) => {
 		let activeUser = req.session.activeuser.email;
 		const cartItem = await cartItems.findOne({ email: activeUser });
 		res.render('cart.ejs',  { name : req.session.activeuser.firstName, userCartData : cartItem.cart })
+
+
+
+
+		// let user = req.session.activeuser.email;
+		// const cartItem = await cartItems.findOne({email : user});
+		// let b = Object.keys(file[user]);
+		// res.render('cart.ejs',  { name : req.session.activeuser.firstName, userCartData : file[l], url : b })
+
+
+
+
+		
+		// let file = {};
+		// fs.readFile('./cartItems.txt', 'utf-8', (err, data) => {
+		// 	if(!err){
+		// 		file = JSON.parse(data)
+		// 	}
+		// 	let l = req.session.activeuser.email;
+		// 	let b = Object.keys(file[l]);
+		// 	res.render('cart.ejs',  { name : req.session.activeuser.firstName, userCartData : file[l], url : b })
+		// })
 	}
 	else
 		res.redirect('/')
@@ -157,6 +335,68 @@ app.route('/cart').get(async (req, res) => {
 				res.end();
 			});
 		});
+
+
+		// let pName = productDetail[id].image; 
+		// console.log(cartItem);
+		// if(cartItem.cart.length > 0){
+		// 	for(let i = 0; i < cartItem.cart.length; i++){
+		// 		if(cart[i].image === pName)
+		// 			break;
+		// 	}
+		// }
+		
+		// let pp = {
+		// 	productName : productDetail[id].productName, 
+		// 	price: productDetail[id].price,
+		// 	image: pName,
+		// 	qty: 1
+		// }
+		
+		
+		
+		// productDetail.cart.push(pp);
+		
+		
+		
+		
+		// const addCartItem = await cartItems.findOne({ email : activeUser });
+		// const addCartItemUser = await cartItems.updateOne({ email : activeUser }, { url : pName });
+		// console.log(addCartItem, addCartItemUser, activeUser);
+		// addCartItemUser.save();
+		// const addCartItemUserDetail = await addCartItemUser.create({ url : pName }, { productName : name, image : pName, price : price, qty : 1 });
+
+
+
+		// let id = JSON.parse(req.body.id);
+		// let fileObj = [], fileObjCart5 = {}, k, pName;
+		// fs.readFile("./productDetails.txt", "utf-8", (err, data) => {
+		// 	if (!err) {
+		// 		fileObj = [];
+		// 		if (data.length > 0 && data[0] === '[' && data[data.length - 1] ===']')
+		// 			fileObj = JSON.parse(data);
+		// 		fs.readFile('./cartItems.txt', 'utf-8', (err, data) => {
+		// 			if (!err) {
+		// 				if (data.length > 0 && data[0] === '{' && data[data.length - 1] ==='}')
+		// 					fileObjCart5 = JSON.parse(data);	
+		// 				k = req.session.activeuser.email;
+		// 				pName = fileObj[id].image;
+		// 				if(fileObjCart5[k][pName] != pName || fileObjCart5[k][pName][qty] == 0){
+		// 					fileObjCart5[k][pName] = {
+		// 						productName : fileObj[id].productName,
+		// 						image : fileObj[id].image,
+		// 						price : fileObj[id].price,
+		// 						// details : fileObj[id].details,
+		// 						qty : 1
+		// 					};
+		// 					fs.writeFile('./cartItems.txt', JSON.stringify(fileObjCart5), (err) => {
+		// 						res.send("Verified")
+		// 					})
+		// 				}
+		// 			}
+		// 		})
+		// 	}
+		// })
 	}
 })
 
@@ -175,6 +415,26 @@ app.post('/delete', (req, res) => {
 				}
 			}
 		});
+
+
+
+
+
+
+
+
+		// let qtyDelete = {};
+		// fs.readFile('./cartItems.txt', 'utf-8', (err, data) => {
+		// 	if(!err){
+		// 		qtyDelete = JSON.parse(data);
+		// 	}
+		// 	let a = req.session.activeuser.email;
+		// 	let b = req.body.id;
+		// 	delete qtyDelete[a][b];
+		// 	fs.writeFile('./cartItems.txt', JSON.stringify(qtyDelete), (err) => {
+		// 		res.send();
+		// 	})
+		// })
 	}
 })
 
@@ -203,6 +463,30 @@ app.post('/qty', async (req, res) => {
 				}
 			}
 		});
+
+
+		// let qtyIncDec = {};
+		// fs.readFile('./cartItems.txt', 'utf-8', (err, data) => {
+		// 	if(!err){
+		// 		qtyIncDec = JSON.parse(data);
+		// 	}
+		// 	let a = req.session.activeuser.email, nn;
+		// 	let b = req.body.id;
+		// 	if(req.body.val == 0 && qtyIncDec[a][b].qty > 1){
+		// 		qtyIncDec[a][b].qty -= 1;
+		// 		nn = qtyIncDec[a][b].qty;
+		// 	}
+		// 	else if(req.body.val == 1){
+		// 		qtyIncDec[a][b].qty += 1;
+		// 		nn = qtyIncDec[a][b].qty;
+		// 	}
+		// 	else{
+		// 		res.send("More than 1")
+		// 	}
+		// 	fs.writeFile('./cartItems.txt', JSON.stringify(qtyIncDec), (err) => {
+		// 		res.send(JSON.stringify(nn));
+		// 	})
+		// })
 	}
 })
 
@@ -211,11 +495,29 @@ app.get('/loadMoreData', async (req, res) => {
 	let abc = productDetail.splice(req.session.load, 5);
 	req.session.load += 5;
 	res.json(abc);
+
+	// let abc = [];
+	// fs.readFile("./productDetails.txt", "utf-8", (err, data) => {
+	// 	if (!err) {
+	// 		if (data.length > 0 && data[0] === '[' && data[data.length - 1] ===']')
+	// 			abc = JSON.parse(data);		
+	// 		let productDetails = abc.splice(req.session.load, 5)
+	// 		req.session.load += 5;
+	// 		res.json(productDetails);
+	// 	}
+	// })
 })
 
 app.get('/getData', async (req, res) => {
 	const productDetail = await productDetails.find();
 	res.send(productDetail);
+
+
+	// fs.readFile("./productDetails.txt", "utf-8", (err, data) => {
+	// 	if (!err) {
+	// 		res.send(data);
+	// 	}
+	// })
 })
 
 /*app.route('/verifyEmail').get((req, res) => {
