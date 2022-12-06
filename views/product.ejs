@@ -1,0 +1,32 @@
+<head>
+    <link rel="stylesheet" href="product.css">
+</head>
+    <header>
+        <h1><a href="/admin">Admins's Portal</a></h1>
+        <div>
+            <a href="/product"><img src="cart.png" alt="" style="width: 20px; height: 20px; margin-right: 10px;">Products</a>
+            <a href="/logout"><img src="logout.png" alt="" style="width: 20px; height: 20px; margin-right: 10px; ">Logout</a>
+        </div>
+</header>
+<div class="container" id="hhhhh">
+    <% for(let i = 0; i < productDetails.length ; i++){ %>
+        <div class="child">
+            <form method="post" action="/update" >
+                <img id="img" src="<%= productDetails[i].image %>" alt="">
+                <input type="hidden" value="<%= productDetails[i].image %>" name="id">
+                <label for="productName">Product Name : </label>
+                <input id="productName" name="productName" value="<%= productDetails[i].productName %>" required><br><br>
+                <label for="price">Product Price : </label>
+                <input id="price" name="price" value="<%= productDetails[i].price %>" required><br><br>
+                <label for="quantity">Product Qty : </label>
+                <input id="quantity" name="qty" value="<%= productDetails[i].qty %>" required><br><br>
+                <label for="details">Product Details : </label>
+                <input id="details" name="details" value="<%= productDetails[i].details %>" required><br><br>
+                    <input id="button" type="submit" value="Update">
+                    <input type="button" class="button1" id="<%= productDetails[i].image %>" value="Delete" onclick=deleteProduct(id)>
+            </form>
+        </div>
+    <% } %>
+</div>
+
+<script src="product.js"></script>

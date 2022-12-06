@@ -1,17 +1,26 @@
 <head>
     <link rel="stylesheet" href="adminPage.css">
 </head>
-<header>Admins's Portal</header>
+    <header>
+        <h1><a href="/admin">Admins's Portal</a></h1>
+        <div>
+            <a href="/product"><img src="cart.png" alt="" style="width: 20px; height: 20px; margin-right: 10px;">Products</a>
+            <a href="/logout"><img src="logout.png" alt="" style="width: 20px; height: 20px; margin-right: 10px; ">Logout</a>
+        </div>
+</header>
 <div>
     <div id="div">
         <h1>Add New Products to the List</h1>
-        <form method="post" action="/73665e26tfgyusdg23tfbcdgvjyhsf73t2872" enctype="multipart/form-data">
+        <form method="post" action="/admin" enctype="multipart/form-data">
             <label for="productName">Product Name : </label>
             <input id="productName" name="productName" placeholder="Product Name" required><br><br>
-            <label for="price">Price : </label>
+            <label for="price">Product Price : </label>
             <input id="price" name="price" placeholder="Price" required><br><br>
+            <label for="quantity">Product Qty : </label>
+            <input id="quantity" name="qty" placeholder="Product Quantity" required><br><br>
+            <label for="image">Product Image : </label>
             <input id="image" name="productImage" class="file" type="file" accept="image/*" required/><br><br>
-            <label for="details">Details : </label>
+            <label for="details">Product Details : </label>
             <textarea name="details" id="details" cols="50" rows="10"></textarea><br><br>
             <input id="button" type="submit" value="Submit">
         </form>

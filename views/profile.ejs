@@ -17,14 +17,21 @@
 <div>
     <div id="div">
         <form method="post" action="/profile">
-            <h1>Change Password</h1>
+            <h1 id="logo">Change Password</h1>
+            <% if(valid != ""){ %>
+                <h1 id="success"><%= valid %></h1>
+            <% } %>
             <label for="firstName">First Name : </label>
             <input type="firstName" placeholder='<%= name %>' id="firstName" name="firstName" disabled><br><br>
             <label for="Email">Email : </label>
             <input placeholder='<%= Email %>' id="Email" name="Email" type="Email" minlength="8" disabled><br><br>
-            <label for="changePassword">Password : </label>
-            <input type="password" placeholder="changePassword" id="changePassword" minlength="8" name="changePassword" required><br><br>
+            <label for="changePassword">New Password : </label>
+            <input type="password" placeholder="New Password" id="changePassword" minlength="8" name="newPassword" onkeyup=confirm() required><br><br>
+            <label for="confirmPassword">Confirm Password : </label>
+            <input type="password" placeholder="Confirm Password" id="confirmPassword" minlength="8" name="confirmPassword" onkeyup=confirm() required><br><br>
             <input id="button" type="submit" value="Change Password">
         </form>
     </div>
 </div>
+
+<script src="profile.js"></script>

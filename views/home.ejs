@@ -10,8 +10,13 @@
             <%}%>
             </a>
         </h2>
-        <a href="/cart"><img src="cart.png" alt="" style="width: 20px; height: 20px; margin-right: 10px;">Cart</a>
-        <a href="/logout"><img src="logout.png" alt="" style="width: 20px; height: 20px; margin-right: 10px; ">Logout</a>
+        <% if(is_logged_in){ %>
+            <a href="/cart"><img src="cart.png" alt="" style="width: 20px; height: 20px; margin-right: 10px;">Cart</a>
+            <a href="/logout"><img src="logout.png" alt="" style="width: 20px; height: 20px; margin-right: 10px; ">Logout</a>
+        <% } else { %>
+            <a href="/login">Login</a>
+            <a href="/signup">SignUp</a>
+        <% } %>
     </div>
 </header>
 <div class="container" id="hhhhh">
@@ -21,14 +26,23 @@
             <h3 id="pName"><%= productDetails[i].productName %></h3>
             <p><b id="details"><%= productDetails[i].price %></b></p>
             <div id="divtest">
-                <input type="button" class="button2" id="btn2<%= i %>" value="Add to Cart"  onclick=addItemToCart(id)>
+                <% if(is_logged_in){ %>
+                    <input type="button" class="button2" id="btn2<%= i %>" value="Add to Cart" onclick=addItemToCart(id)>
+                <% } else { %>
+                    <a href="/login" class="button2">Add to Cart</a>
+                    <!-- <input type="button" class="button2" id="btn2<%= i %>" value="Add to Cart" onclick=login()> -->
+                <% } %>
                 <input type="button" class="button1" id="btn<%= i %>" value="View Details" onclick=loadDialogBox(id)>
             </div>
         </div>
     <% } %>
 </div>
 <div id="loadMore">
+    <% if(is_logged_in){ %>
         <button id="loadMoreBtn" onclick=loadMore()>Load More</button>
+    <% } else { %>
+        <button id="loadMoreBtn" onclick=load()>Load More</button>
+    <% } %>
 </div>
 <dialog id="dialog">
     <div id="flex">

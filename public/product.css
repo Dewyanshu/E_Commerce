@@ -1,5 +1,5 @@
 body{
-    margin: 0%;
+    margin: 0px;
 }
 header{
     display: flex;
@@ -13,17 +13,25 @@ header{
     color: whitesmoke;
     box-shadow: 0px 5px 18px teal;
     border-radius: 0em 0em 0.2em 0.2em;
+}
+div{
+    height: 60vh;
+    margin: 0%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 } 
-#idid{
+header > div > h2 > a, header > div > a, header > h1 > a{
+    text-decoration: none;
+    color: whitesmoke;
+}
+header > div{
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
-    gap: 10px;
-}
-header > div > h2 > a, header > div > a, header > h1 > a{
-    text-decoration: none;
-    color: whitesmoke;
+    gap: 20px;
 }
 header > div > a{
     font-size: 26px;
@@ -36,52 +44,39 @@ header > div > h2 > a:hover, header > div > a:hover{
     border-radius: 0.4em;
     padding: 0.2em 0.4em;
 }
-a, h1, h2, button{
-    margin: 0%;
+.container{
+    margin-top: 5vh;
+    display: grid;
+    grid-template: repeat(1, 1fr) / repeat(5, 1fr);
 }
-div{
-    height: 80vh;
-    margin: 0%;
+.child{
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
+    justify-content: space-around;
+    padding: 5% 10%;
+    margin-bottom: 2vh;
 }
-#div{
-    text-align: center;
-    padding: 2%;
-    border: 2px solid white;
-    box-shadow: 0em 0em 2em 0.3em teal;
+.child:hover{
     border-radius: 1em;
-    margin: 2em;
-    height: 45vh;
-    width: 30vw;
+    box-shadow: 0px 0px 8px teal;
 }
-form{
-    width: 100%;
-    padding: 2%;
-    margin: 0%;
-    text-align: center;
+#img{
+    width: 150px;
+    height: 180px;
+    align-self: center;
+    display: block;
+    margin-bottom: 1em;
 }
-h1{
-    color: rgb(3, 95, 95);
-    font-weight: bolder;
-}
-#Email, #changePassword, #confirmPassword, #firstName{
+#quantity, #productName, #price, #details{
     border-radius: 0.5em;
-    padding: 1% 0%;
-    padding-left: 2%;
+    /* padding: 1% 0%;
+    padding-left: 2%; */
     border-color: teal;
     font-weight: bold;
     color: rgb(4, 52, 52);
 }
-label{
-    font-size: 18px;
-    font-weight: bold;
-    color: rgb(4, 52, 52);
-}
-#button{
-    padding: 5px 40px;
+#button, .button1{
+    padding: 5px 25px;
     font-size: larger;
     font-weight: 600;
     border-radius: 0.8em;
@@ -89,13 +84,9 @@ label{
     box-shadow: 3px 3px 5px teal;
     color: white;
     border-color: white;
+    display: inline-block;
 }
-#logo{
-    color: rgb(3, 95, 95);
-    font-size: 44px;
-    margin-bottom: 0.5em;
-}
-#success{
-    color: red;
-    margin-bottom: 1em;
+.button1{
+    background-color: red;
+    box-shadow: 3px 3px 5px red;
 }

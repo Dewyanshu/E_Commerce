@@ -18,8 +18,8 @@
     <% for(let i = 0; i < userCartData.length ; i++){ %>
         <div class="child">
             <img id="img" src="<%= userCartData[i].image %>" alt="">
-            <h3 id="pName"><%= userCartData[i].productName %></h3>
-            <h2><b id="details"><%= userCartData[i].price %></b></h2>
+            <h3 id="pName"><%= productItem[i].productName %></h3>
+            <h2><b id="details"><%= productItem[i].price %></b></h2>
             <h3 id="pName">Quantity : <span id="qty"><%= userCartData[i].qty %></span></h3>
             <div id="divtest">
                 <div>

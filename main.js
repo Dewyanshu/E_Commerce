@@ -16,10 +16,10 @@ app.use(express.urlencoded({extended : true }))
 app.use(express.json())
 
 const serverStart = require('./dataBase/startServer.js')
-serverStart();
 const userDetails = require('./dataBase/userDetails.js')
 const cartItems = require('./dataBase/cartItems.js')
 const productDetails = require('./dataBase/productDetails.js')
+serverStart();
 
 app.use(session({
 	secret: 'keyboard cat',
@@ -28,32 +28,34 @@ app.use(session({
 }))
 
 app.route('/').get(async (req, res) => {
+	if(req.session.is_logged_in){
+		res.redirect('/login');
+	}
+	else{
+		req.session.load = 5;
+		const fileObj = await productDetails.find({});
+		const productDetail = fileObj.splice(0, req.session.load);
+		res.render('home.ejs', { name: '', productDetails: productDetail, is_logged_in: false })
+	}
+})
+
+app.route('/login').get(async (req, res) => {
 	if (req.session.is_logged_in) {
 		req.session.load = 5;
+		let activeUser = req.session.activeuser.email;
+		// let cartItem = await cartItems.findOne({ email: activeUser });
+		// if(cartItem.cart.length && req.session.p){
+		// 	req.session.p = 0;
+		// 	res.redirect('/cart');
+		// 	return;
+		// }
 		let name = req.session.activeuser.firstName;
 		const fileObj = await productDetails.find({});
 		const productDetail = fileObj.splice(0, req.session.load);
-		res.render('home.ejs', { name: name, productDetails: productDetail })
-
-
-
-
-
-		// let fileObj = [];
-		// req.session.load = 5;
-		// fs.readFile("./productDetails.txt", "utf-8", (err, data) => {
-		// 	if (!err) {
-		// 		fileObj = [];
-		// 		if (data.length > 0 && data[0] === '[' && data[data.length - 1] ===']')
-		// 			fileObj = JSON.parse(data);		
-		// 		let name = req.session.activeuser.firstName;
-		// 		let productDetails = fileObj.splice(0, req.session.load)
-		// 		res.render('home.ejs', { name: name, productDetails: productDetails })
-		// 	}
-		// })
+		res.render('home.ejs', { name: name, productDetails: productDetail, is_logged_in: true })
 	}
 	else {
-		res.render('login.ejs', {name : ""})
+		res.render('login.ejs', {name : ""});
 	}
 })
 .post(async (req, res) => {
@@ -62,94 +64,39 @@ app.route('/').get(async (req, res) => {
 		if(existingUser.password == req.body.password){
 			req.session.activeuser = existingUser;
 			req.session.is_logged_in = true;
-			res.redirect('/')
+			req.session.p = 1;
+			if(req.session.activeuser.email == 'pandeydewyanshu421@gmail.com'){
+				res.redirect('/admin')
+				return;
+			}
+			res.redirect('/login')
 			return;
 		}
 	}
 	res.render('login.ejs', { name : "Invalid Credential!!" })
-
-
-
-
-
-
-
-
-
-
-
-	// fs.readFile("./db.txt", "utf-8", (err, data) => {
-	// 	if (!err) {
-	// 		let file = [], count = 0;
-	// 		if (data.length > 0 && data[0] === '[' && data[data.length - 1] ===']')
-	// 			file = JSON.parse(data);
-	// 		file.forEach((file) => {
-	// 			if (file.email == req.body.email && file.password == req.body.password) {
-	// 				req.session.activeuser = file;
-	// 				count++;
-	// 			}
-	// 		})
-	// 		if (count === 0) {
-	// 			res.render('login.ejs', { name : "Invalid Credential!!" })
-	// 		}
-	// 		else {
-	// 			req.session.is_logged_in = true;
-	// 			res.redirect('/')
-	// 		}
-	// 	}
-	// })
 })
 
 app.route('/profile').get((req, res) => {
 	if(req.session.is_logged_in){
-		res.render('profile.ejs', {name: req.session.activeuser.firstName, Email: req.session.activeuser.email});
+		res.render('profile.ejs', {name: req.session.activeuser.firstName, Email: req.session.activeuser.email, valid: ""});
 	}
 	else{
-		res.redirect('/');
+		res.redirect('/login');
 	}
 })
 .post(async (req, res) => {
-	if(req.body.changePassword.length > 7){
-		const user = await userDetails.updateOne({email : req.session.activeuser.email}, {password: req.body.changePassword});
-		res.redirect('/')
-		return;
+	if(req.body.newPassword.length > 7 && req.body.confirmPassword === req.body.newPassword){
+		const user = await userDetails.updateOne({email : req.session.activeuser.email}, {password: req.body.newPassword});
+		res.render('profile.ejs', {name: req.session.activeuser.firstName, Email: req.session.activeuser.email, valid: "Password changed successfully"});
 	}
 	else{
 		res.redirect('/profile');
 	}
-
-
-
-
-
-
-
-	// let a = 9;
-	// fs.readFile("./db.txt", "utf-8", (err, data) => {
-	// 	if (!err) {
-	// 		let file1 = [];
-	// 		if (data.length > 0 && data[0] === '[' && data[data.length - 1] ===']')
-	// 			file1 = JSON.parse(data);
-	// 		file1.forEach((file1) => {
-	// 			if (file1.email === req.session.activeuser.email && file1.password != req.body.changePassword && req.body.changePassword.length >= 8){
-	// 				file1.password = req.body.changePassword;
-	// 				a = 0;
-	// 			}
-	// 		})
-	// 		fs.writeFile('./db.txt', JSON.stringify(file1), (err) => {
-	// 			res.redirect('/')
-	// 			return;
-	// 		})
-	// 		if(a != 0){
-	// 			res.redirect('/profile')
-	// 		}
-	// 	}
-	// })
 })
 
 app.route('/signup').get((req, res) => {
     if(req.session.is_logged_in) {
-		res.redirect('/');
+		res.redirect('/login');
 	}
 	else{
         res.render('signup.ejs', { name : "" })
@@ -157,7 +104,7 @@ app.route('/signup').get((req, res) => {
 })
 .post(async (req, res) => {
 	if (req.session.is_logged_in) {
-		res.redirect('/');
+		res.redirect('/login');
 	}
 	else {
 		const { firstName, lastName, mobile, email, password } = req.body;
@@ -175,137 +122,52 @@ app.route('/signup').get((req, res) => {
 				const cartItem = new cartItems();
 				cartItem.email = email;
 				cartItem.save();
-				res.redirect('/');
+				res.redirect('/login');
 		}
 		else{
 			res.render('signup.ejs', { name : "Invalid Credentials!!" });
 		}
-
-
-
-
-
-		// fs.readFile("./db.txt", "utf-8", (err, data) => {
-		// 	if (!err) {
-		// 		let { firstName, lastName, mobile, email, password } = req.body;
-		// 		let file = [], count = 0;
-		// 		if (data.length > 0 && data[0] === '[' && data[data.length - 1] === ']')
-		// 			file = JSON.parse(data);
-		// 		for(let i = 0; i < file.length; i++){
-		// 			if ((file[i].email === req.body.email) || (req.body.email === '') || (req.body.password === '')) {
-		// 				count++;
-		// 			}
-		// 		}
-		// 		let user = {
-		// 			firstName: firstName,
-		// 			lastName: lastName,
-		// 			mobile: mobile,
-		// 			email: email,
-		// 			password: password,
-		// 			isVerified: true,
-		// 			mailToken: Date.now()%10000
-		// 		}
-		// 		req.session.activeuser = user;
-		// 		if (count == 0) {
-		// 			file.push(user);
-		// 			fs.writeFile("./db.txt", JSON.stringify(file), (err) => {
-		// 				/*sendEmail(email, user.mailToken, (err, data) => {
-		// 					if(err){
-		// 						res.render('signup.ejs', { name : 'Something went wrong.' })
-		// 						return;
-		// 					}
-		// 				})*/
-		// 				// res.render('verifyEmail.ejs', { name : "Enter OTP and verify Email!!!" })
-		// 				// res.redirect('/');
-		// 			})
-		// 			fs.readFile("./productDetails.txt", "utf-8", (err, data) => {
-		// 				if (!err) {
-		// 					let fileObj1 = [], fileObjCart = {}, k;
-		// 					if (data.length > 0 && data[0] === '[' && data[data.length - 1] ===']')
-		// 						fileObj1 = JSON.parse(data);
-		// 					// req.session.is_logged_in = true;
-		// 					fs.readFile('./cartItems.txt', 'utf-8', (err, data) => {
-		// 						if (!err) {
-		// 							if (data.length > 0 && data[0] === '{' && data[data.length - 1] ==='}')
-		// 								fileObjCart = JSON.parse(data);		
-		// 							k = req.session.activeuser.email;
-		// 							fileObjCart[k] = {};
-		// 							fs.writeFile('./cartItems.txt', JSON.stringify(fileObjCart), (err) => {
-		// 							})
-		// 						}
-		// 					})
-		// 					res.redirect('/');
-		// 				}
-		// 			})
-		// 		}
-		// 		else {
-		// 			res.render('signup.ejs', { name : "Invalid Credentials!!" })
-		// 		}
-		// 	}
-		// })
 	}
 })
 
-app.route('/73665e26tfgyusdg23tfbcdgvjyhsf73t2872').get((req, res) => {
-    res.render('adminPage.ejs')
+app.route('/admin').get((req, res) => {
+	if (req.session.is_logged_in && req.session.activeuser.email == 'pandeydewyanshu421@gmail.com') {
+    	res.render('adminPage.ejs')
+		return;
+	}
+	res.redirect('/');
 })
 .post(upload.single('productImage'), (req, res) => {
 	const productDetail = new productDetails();
 	productDetail.productName = req.body.productName;
 	productDetail.details = req.body.details;
+	productDetail.qty = req.body.qty;
 	productDetail.price = req.body.price;
 	productDetail.image = req.file.filename;
 	productDetail.save();
-	res.redirect('/');
-
-
-    // fs.readFile("./productDetails.txt", "utf-8", (err, data) => {
-    //     if(!err){	
-    //         let file = [];
-    //         if(data.length > 0 && data[0] === '[' && data[data.length - 1] === ']')
-    //             file = JSON.parse(data);
-    //         let oo = {};
-    //         oo = req.body;
-    //         oo.image = req.file.filename;
-    //         file.push(oo);
-    //         fs.writeFile("./productDetails.txt", JSON.stringify(file), (err, data) => {
-    //             res.end();
-    //         })
-    //     }
-    // })
-    // res.redirect('/')
+	res.redirect('/admin');
 })
 
 app.route('/cart').get(async (req, res) => {
 	if(req.session.is_logged_in){
-		let activeUser = req.session.activeuser.email;
+		let obj = [], activeUser = req.session.activeuser.email;
 		const cartItem = await cartItems.findOne({ email: activeUser });
-		res.render('cart.ejs',  { name : req.session.activeuser.firstName, userCartData : cartItem.cart })
-
-
-
-
-		// let user = req.session.activeuser.email;
-		// const cartItem = await cartItems.findOne({email : user});
-		// let b = Object.keys(file[user]);
-		// res.render('cart.ejs',  { name : req.session.activeuser.firstName, userCartData : file[l], url : b })
-
-
-
-
-		
-		// let file = {};
-		// fs.readFile('./cartItems.txt', 'utf-8', (err, data) => {
-		// 	if(!err){
-		// 		file = JSON.parse(data)
-		// 	}
-		// 	let l = req.session.activeuser.email;
-		// 	let b = Object.keys(file[l]);
-		// 	res.render('cart.ejs',  { name : req.session.activeuser.firstName, userCartData : file[l], url : b })
-		// })
+		let d = cartItem.cart;
+		for(let i = 0; i < cartItem.cart.length; i++){
+			let p = cartItem.cart[i].image;
+			const productDetail = await productDetails.findOne({ image: p });
+			if(productDetail){
+				obj.push(productDetail);
+			}
+			else{
+				d.splice(i, 1);
+				cartItems.updateOne({ email: activeUser }, { cart: d });
+			}
+		}		
+		res.render('cart.ejs',  { name : req.session.activeuser.firstName, userCartData : d, productItem: obj });
 	}
 	else
-		res.redirect('/')
+		res.redirect('/login');
 })
 .post(async (req, res) => {
 	if(req.session.is_logged_in){
@@ -324,8 +186,8 @@ app.route('/cart').get(async (req, res) => {
 			}
 			if(a === 0 || data.cart.length === 0){
 				let obj = {
-					productName : productDetail[id].productName, 
-					price: productDetail[id].price,
+					// productName : productDetail[id].productName, 
+					// price: productDetail[id].price,
 					image: productDetail[id].image,
 					qty: 1
 				}
@@ -335,71 +197,9 @@ app.route('/cart').get(async (req, res) => {
 				res.end();
 			});
 		});
-
-
-		// let pName = productDetail[id].image; 
-		// console.log(cartItem);
-		// if(cartItem.cart.length > 0){
-		// 	for(let i = 0; i < cartItem.cart.length; i++){
-		// 		if(cart[i].image === pName)
-		// 			break;
-		// 	}
-		// }
-		
-		// let pp = {
-		// 	productName : productDetail[id].productName, 
-		// 	price: productDetail[id].price,
-		// 	image: pName,
-		// 	qty: 1
-		// }
-		
-		
-		
-		// productDetail.cart.push(pp);
-		
-		
-		
-		
-		// const addCartItem = await cartItems.findOne({ email : activeUser });
-		// const addCartItemUser = await cartItems.updateOne({ email : activeUser }, { url : pName });
-		// console.log(addCartItem, addCartItemUser, activeUser);
-		// addCartItemUser.save();
-		// const addCartItemUserDetail = await addCartItemUser.create({ url : pName }, { productName : name, image : pName, price : price, qty : 1 });
-
-
-
-		// let id = JSON.parse(req.body.id);
-		// let fileObj = [], fileObjCart5 = {}, k, pName;
-		// fs.readFile("./productDetails.txt", "utf-8", (err, data) => {
-		// 	if (!err) {
-		// 		fileObj = [];
-		// 		if (data.length > 0 && data[0] === '[' && data[data.length - 1] ===']')
-		// 			fileObj = JSON.parse(data);
-		// 		fs.readFile('./cartItems.txt', 'utf-8', (err, data) => {
-		// 			if (!err) {
-		// 				if (data.length > 0 && data[0] === '{' && data[data.length - 1] ==='}')
-		// 					fileObjCart5 = JSON.parse(data);	
-		// 				k = req.session.activeuser.email;
-		// 				pName = fileObj[id].image;
-		// 				if(fileObjCart5[k][pName] != pName || fileObjCart5[k][pName][qty] == 0){
-		// 					fileObjCart5[k][pName] = {
-		// 						productName : fileObj[id].productName,
-		// 						image : fileObj[id].image,
-		// 						price : fileObj[id].price,
-		// 						// details : fileObj[id].details,
-		// 						qty : 1
-		// 					};
-		// 					fs.writeFile('./cartItems.txt', JSON.stringify(fileObjCart5), (err) => {
-		// 						res.send("Verified")
-		// 					})
-		// 				}
-		// 			}
-		// 		})
-		// 	}
-		// })
 	}
 })
-
+	
 app.post('/delete', (req, res) => {
 	if(req.session.is_logged_in){
 		let activeUser = req.session.activeuser.email;
@@ -415,26 +215,6 @@ app.post('/delete', (req, res) => {
 				}
 			}
 		});
-
-
-
-
-
-
-
-
-		// let qtyDelete = {};
-		// fs.readFile('./cartItems.txt', 'utf-8', (err, data) => {
-		// 	if(!err){
-		// 		qtyDelete = JSON.parse(data);
-		// 	}
-		// 	let a = req.session.activeuser.email;
-		// 	let b = req.body.id;
-		// 	delete qtyDelete[a][b];
-		// 	fs.writeFile('./cartItems.txt', JSON.stringify(qtyDelete), (err) => {
-		// 		res.send();
-		// 	})
-		// })
 	}
 })
 
@@ -442,7 +222,7 @@ app.post('/qty', async (req, res) => {
 	if(req.session.is_logged_in){
 		let activeUser = req.session.activeuser.email;
 		let id = req.body.id, nn;
-		cartItems.findOne({ email: activeUser }, (err, data) => {
+		cartItems.findOne({ email: activeUser }, async (err, data) => {
 			for(let i = 0; i < data.cart.length; i++){
 				if(data.cart[i].image === id){
 					if(req.body.val == 0 && data.cart[i].qty > 1){
@@ -450,10 +230,16 @@ app.post('/qty', async (req, res) => {
 						nn = data.cart[i].qty;
 					}
 					else if(req.body.val == 1){
-						data.cart[i].qty += 1;
+						let productDetail = await productDetails.findOne({ image: id });
+						if(data.cart[i].qty != productDetail.qty && data.cart[i].qty <= productDetail.qty){
+							data.cart[i].qty += 1;
+						}
+						if(data.cart[i].qty >= productDetail.qty){
+							data.cart[i].qty = productDetail.qty;
+						}
 						nn = data.cart[i].qty;
 					}
-				 	else{
+					else{
 						res.send("More than 1")
 					}
 					cartItems.updateOne({ email: activeUser }, { cart: data.cart }, function(err, result){
@@ -463,31 +249,50 @@ app.post('/qty', async (req, res) => {
 				}
 			}
 		});
-
-
-		// let qtyIncDec = {};
-		// fs.readFile('./cartItems.txt', 'utf-8', (err, data) => {
-		// 	if(!err){
-		// 		qtyIncDec = JSON.parse(data);
-		// 	}
-		// 	let a = req.session.activeuser.email, nn;
-		// 	let b = req.body.id;
-		// 	if(req.body.val == 0 && qtyIncDec[a][b].qty > 1){
-		// 		qtyIncDec[a][b].qty -= 1;
-		// 		nn = qtyIncDec[a][b].qty;
-		// 	}
-		// 	else if(req.body.val == 1){
-		// 		qtyIncDec[a][b].qty += 1;
-		// 		nn = qtyIncDec[a][b].qty;
-		// 	}
-		// 	else{
-		// 		res.send("More than 1")
-		// 	}
-		// 	fs.writeFile('./cartItems.txt', JSON.stringify(qtyIncDec), (err) => {
-		// 		res.send(JSON.stringify(nn));
-		// 	})
-		// })
 	}
+})
+
+app.route('/product').get(async (req, res)=>{
+	if(req.session.is_logged_in && req.session.activeuser.email == 'pandeydewyanshu421@gmail.com') {
+		const productDetail = await productDetails.find({});
+		res.render('product.ejs', { name: '', productDetails: productDetail })
+	}
+	else
+		res.redirect('/login');
+})
+
+app.post('/update', (req, res) => {
+	if(req.session.is_logged_in && req.session.activeuser.email == 'pandeydewyanshu421@gmail.com'){
+		let id = req.body.id;
+		productDetails.updateOne({ image: id }, { 
+			productName: req.body.productName,
+    		details: req.body.details,
+			qty: req.body.qty,
+			price: req.body.price
+		}, (err, data)=>{
+			res.redirect('/product');
+		})		
+	}
+	else{
+		res.redirect('/login');
+	}
+})
+
+app.post('/deleteProduct', (req, res)=>{
+	if(req.session.is_logged_in && req.session.activeuser.email == 'pandeydewyanshu421@gmail.com'){
+		let id = req.body.id;
+		productDetails.deleteOne({ image: id }, (err, result) => {
+			res.send('OK');
+		})
+	}
+	else{
+		res.redirect('/login');
+	}
+})
+
+app.get('/loadMoreDataLogin', (req, res) => {
+	res.redirect('/login');
+	res.end();
 })
 
 app.get('/loadMoreData', async (req, res) => {
@@ -495,29 +300,11 @@ app.get('/loadMoreData', async (req, res) => {
 	let abc = productDetail.splice(req.session.load, 5);
 	req.session.load += 5;
 	res.json(abc);
-
-	// let abc = [];
-	// fs.readFile("./productDetails.txt", "utf-8", (err, data) => {
-	// 	if (!err) {
-	// 		if (data.length > 0 && data[0] === '[' && data[data.length - 1] ===']')
-	// 			abc = JSON.parse(data);		
-	// 		let productDetails = abc.splice(req.session.load, 5)
-	// 		req.session.load += 5;
-	// 		res.json(productDetails);
-	// 	}
-	// })
 })
 
 app.get('/getData', async (req, res) => {
 	const productDetail = await productDetails.find();
 	res.send(productDetail);
-
-
-	// fs.readFile("./productDetails.txt", "utf-8", (err, data) => {
-	// 	if (!err) {
-	// 		res.send(data);
-	// 	}
-	// })
 })
 
 /*app.route('/verifyEmail').get((req, res) => {

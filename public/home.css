@@ -70,6 +70,7 @@ img{
     border: 3px solid teal;
 }
 .button2{
+    text-decoration: none;
     border: 3px solid white;
     background-color: black;
     color: aliceblue;
