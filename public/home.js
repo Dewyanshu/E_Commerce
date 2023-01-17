@@ -1,3 +1,4 @@
+let x = 0;
 function login(){
     let request = new XMLHttpRequest;
     request.open('GET', '/loadMoreDataLogin');
@@ -13,6 +14,10 @@ function loadMore(){
     request.send();
     request.addEventListener('load', function(){
         let obj1 = JSON.parse(request.responseText)
+        if(obj1[obj1.length - 1] == 100){
+            obj1.pop();
+            x = 1;
+        }
         for(i = 0; i < obj1.length; i++){
             let container = document.getElementById("hhhhh");
             let flag = document.getElementsByClassName("child");
@@ -48,6 +53,11 @@ function loadMore(){
             input.setAttribute("id", `btn${flag}`);
             input.setAttribute("value", "View Details");
             input.setAttribute("onclick", "loadDialogBox(id)");
+            if(x == 1){
+                const loadMoreBtn = document.getElementById('loadMore');
+                loadMoreBtn.style.display = "none";
+                x = 0;
+            }
             divTest.appendChild(input)
             child.appendChild(divTest);
             container.appendChild(child);
@@ -62,6 +72,10 @@ function load(){
     request.send();
     request.addEventListener('load', function(){
         let obj1 = JSON.parse(request.responseText)
+        if(obj1[obj1.length - 1] == 100){
+            obj1.pop();
+            x = 1;
+        }
         for(i = 0; i < obj1.length; i++){
             let container = document.getElementById("hhhhh");
             let flag = document.getElementsByClassName("child");
@@ -95,6 +109,11 @@ function load(){
             input.setAttribute("id", `btn${flag}`);
             input.setAttribute("value", "View Details");
             input.setAttribute("onclick", "loadDialogBox(id)");
+            if(x == 1){
+                const loadMoreBtn = document.getElementById('loadMore');
+                loadMoreBtn.style.display = "none";
+                x = 0;
+            }
             divTest.appendChild(input)
             child.appendChild(divTest);
             container.appendChild(child);

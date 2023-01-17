@@ -19,6 +19,7 @@ const serverStart = require('./dataBase/startServer.js')
 const userDetails = require('./dataBase/userDetails.js')
 const cartItems = require('./dataBase/cartItems.js')
 const productDetails = require('./dataBase/productDetails.js')
+const { json } = require('express')
 serverStart();
 
 app.use(session({
@@ -152,7 +153,8 @@ app.route('/cart').get(async (req, res) => {
 	if(req.session.is_logged_in){
 		let obj = [], activeUser = req.session.activeuser.email;
 		const cartItem = await cartItems.findOne({ email: activeUser });
-		let d = cartItem.cart;
+		let d = JSON.stringify(cartItem.cart);
+		d = JSON.parse(d);
 		for(let i = 0; i < cartItem.cart.length; i++){
 			let p = cartItem.cart[i].image;
 			const productDetail = await productDetails.findOne({ image: p });
@@ -298,6 +300,9 @@ app.get('/loadMoreDataLogin', (req, res) => {
 app.get('/loadMoreData', async (req, res) => {
 	const productDetail = await productDetails.find({});
 	let abc = productDetail.splice(req.session.load, 5);
+	if(req.session.load >= productDetail.length){
+		abc.push(100);
+	}
 	req.session.load += 5;
 	res.json(abc);
 })
